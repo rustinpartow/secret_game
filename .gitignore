@@ -1,0 +1,12 @@
+# Logs
+*.log
+
+# Node dependencies
+node_modules/
+
+# Cloudflare worker temp files
+.wrangler/
+
+# Build outputs
+/frontend/build/
+/backend/dist/

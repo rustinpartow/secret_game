@@ -1,0 +1,216 @@
+# Secret Game - Rustin's Birthday Party Game
+
+## Project Overview
+A browser-based social multiplayer game for 25+ people at Golden Gate Park (Larkin Meadow). Players have targets (other players or environmental quests) and compete through silly social interactions and park exploration.
+
+## Tech Stack
+- **Frontend**: React with TypeScript, mobile-first design
+- **Backend**: Node.js/Express with WebSocket support for real-time updates
+- **Database**: Simple JSON file or SQLite for rapid development
+- **Hosting**: Cloudflare Pages (frontend) + Cloudflare Workers (backend)
+- **Styling**: Tailwind CSS for rapid mobile-responsive development
+
+## Core Game Mechanics
+- **Circular Targeting**: Each player targets exactly one other player and is targeted by exactly one player
+- **Kill System**: Requires confirmation from both killer and victim
+- **Environmental Quests**: Assigned when killed or after completing previous quest
+- **No Authentication**: Players just enter their name to join
+
+## Game State Structure
+```typescript
+interface Player {
+  id: string;
+  name: string;
+  avatar: string; // Rustin-themed monster character
+  kills: number;
+  questsCompleted: number;
+  currentTarget?: string; // player ID
+  currentQuest?: string; // quest description
+  isAlive: boolean;
+  pendingKillConfirmation?: {
+    killerId: string;
+    timestamp: number;
+  };
+}
+
+interface GameState {
+  players: Record<string, Player>;
+  targetChain: string[]; // circular array of player IDs
+  availableQuests: string[];
+  gameStarted: boolean;
+}
+```
+
+## Mobile-First Design Requirements
+- Large touch targets (minimum 44px)
+- Clear, bold typography
+- Single-column layout
+- Minimal scrolling
+- Offline-friendly (cache game state)
+- Battery-efficient (minimal animations)
+
+## Avatar System - Rustin Variations
+Generate cute cartoon monsters that are variations of Rustin:
+- Base: Persian guy, light beard, glasses, decent jawline
+- Variations: Different monster types (dragon-rustin, ghost-rustin, robot-rustin, etc.)
+- Style: Minimalist, colorful, friendly
+- Format: SVG for scalability and small file size
+
+## Environmental Quests for Golden Gate Park (Larkin Meadow)
+**TODO: Review and expand this list - needs to inspire social/environmental connection**
+
+### Social Connection Quests (Interact with strangers/park visitors):
+- "Compliment 3 different dog owners on their dogs and learn each dog's name"
+- "Find someone who's never been to Golden Gate Park before and give them one fun fact about it"
+- "Start a conversation with someone about their favorite picnic food"
+- "Help someone take a photo and ask them to tell you about their day"
+- "Find someone wearing the same color as you and discover one thing you have in common"
+
+### Environmental Exploration Quests:
+- "Find and touch 5 different types of trees and name at least 2 of them"
+- "Locate a piece of litter, dispose of it properly, and find something beautiful in nature to balance it out"
+- "Find the highest point you can access in the meadow and do a 30-second meditation"
+- "Discover something in the park you've never noticed before and take a mental snapshot"
+- "Find evidence of 3 different animals (birds, insects, squirrels, etc.) and observe their behavior"
+
+### Creative/Fun Quests:
+- "Create a 30-second dance inspired by something you see in nature"
+- "Build a small, temporary art installation using only natural materials (leave no trace)"
+- "Write a haiku about Golden Gate Park and recite it to yourself"
+- "Find the most interesting cloud and make up a story about what it looks like"
+
+## Kill Mission Examples (Social Interactions)
+- "Get your target to say 'porridge' 5 times in one conversation"
+- "Convince your target to sing a song (any song, even humming counts)"  
+- "Get your target to tell you their most embarrassing moment"
+- "Have your target do 10 jumping jacks with you"
+- "Get your target to draw a picture of you (on phone, paper, or in dirt)"
+
+## Development Priorities
+1. **Core Game Loop**: Join → Get Target → Kill/Quest → Confirm → Repeat
+2. **Kill Confirmation System**: Both players must confirm for state to update
+3. **Target Reassignment**: When player dies, killer inherits their target
+4. **Mobile UI**: Clean, simple, thumb-friendly interface
+5. **Real-time Updates**: WebSocket for kill confirmations and target updates
+6. **Offline Resilience**: Handle network issues gracefully
+
+## File Structure
+```
+/
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── utils/
+│   │   └── types/
+│   ├── public/
+│   └── package.json
+├── backend/
+│   ├── src/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   └── types/
+│   └── package.json
+└── .cursorrules
+```
+
+## Deployment Notes
+- Use Cloudflare Pages for frontend (automatic builds from git)
+- Use Cloudflare Workers for backend API
+- Consider Cloudflare KV or Durable Objects for game state persistence
+
+## Key Features to Implement
+- [ ] Player registration (name only)
+- [ ] Rustin-themed avatar generation
+- [ ] Circular target assignment
+- [ ] Kill confirmation system (both players confirm)
+- [ ] Environmental quest assignment
+- [ ] Mobile-optimized UI
+- [ ] Real-time state updates
+- [ ] Game statistics display
+- [ ] Quest/kill completion tracking
+
+## Future Enhancements (Post-Party)
+- [ ] Resurrection system for completed environmental quests
+- [ ] Leaderboard
+- [ ] Game session history
+- [ ] Better quest randomization
+- [ ] Photo challenges integrated with quests
+
+## 📝 COMPLETED & REMAINING PRIORITIES (June 2025)
+
+Priority Legend: P0 = Critical, P1 = High, P2 = Medium, P3 = Low
+
+### ✅ COMPLETED PRIORITIES
+
+- **✅ P0 – Game Lifecycle Improvements**
+  1. ✅ **Lobby Phase** - No auto-start, players join lobby, host manually starts game
+  2. ✅ **Multiple Concurrent Sessions** - Session codes (e.g., GAME, PARK) with isolated state
+  3. ✅ **Expanded Avatar Parts Library** - 40+ monster types, colors, accessories, facial features
+  4. ❌ Formalize quest generation principles (deferred)
+
+- **✅ P1 – Deployment & Hosting**
+  1. ✅ **Production Deployment Ready** - Comprehensive deployment guide with configs:
+     • Frontend → Vercel/Netlify/GitHub Pages (with vercel.json)
+     • Backend → Railway/Heroku/DigitalOcean (with Procfile, railway.toml)
+     • 5-minute quick deploy instructions in DEPLOYMENT.md
+
+- **✅ P1 – Avatar Evolution**
+  • ✅ **Leveling System** - 6 evolution levels (Rookie → Legendary) with visual enhancements
+  • ✅ **Achievement-Based Progression** - Crowns, auras, flames, sparkles, size boosts
+  • ✅ **Visual Feedback** - Progress bars, evolution status in lobby & game UI
+
+- **✅ P0 – Core Game Mechanics Fixes** (Critical - COMPLETED)
+  • ✅ **Kill Confirmation Bug Fixed** - Victims now properly receive kill confirmation popups
+  • ✅ **Quest System Separation** - Alive players only get kill missions, dead players only get environmental quests
+  • ✅ **Subtle Kill Missions** - 50 conversation-based missions that don't reveal assassination intent
+  • ✅ **Witness Quest Confirmation** - Environmental quests require witness confirmation for social interaction
+  • ✅ **Active Sessions Display** - Lobby shows other concurrent game sessions
+
+### 🔄 REMAINING PRIORITIES
+
+- **P0 – Content Expansion** (Critical)
+  • **Expand environmental quests** to 200 total (currently 120) - Need 80 more
+  • **Refine quest quality** for better party dynamics and Golden Gate Park specificity
+
+- **P1 – Social Features** (High Priority)
+  • **Chat system** - View all players and send messages (max 10 characters)
+  • **Player communication** for coordination and social interaction during gameplay
+
+- **P2 – Feedback & Analytics** (Medium Priority)  
+  • **Feedback button** for players to submit game improvement suggestions
+  • **Basic analytics** for game session insights and post-party analysis
+
+- **P3 – Advanced Game Dynamics** (Future Enhancements)
+  • **Player resurrection system** - After completing environmental quest, dead players can re-enter kill loop
+  • **Milestone rewards/power-ups** after certain kill counts (swap target, shield, reveal hint)
+  • **Real-time leaderboard** with dynamic rankings during gameplay
+
+### 🎯 DEPLOYMENT STATUS
+**✅ PRODUCTION DEPLOYED & FULLY FUNCTIONAL** - All core features working perfectly
+
+**🌐 Live Game URLs:**
+- **Frontend:** https://rustin-secret-game-rustinpartow-rustin-john-partows-projects.vercel.app
+- **Backend:** https://rustin-secret-game-production.up.railway.app
+
+### 🚀 CURRENT STATUS (December 2024)
+**✅ READY FOR GOLDEN GATE PARK PARTY** - All critical bugs fixed, game mechanics perfected
+
+**🎮 Fully Working Features:**
+- ✅ **Kill confirmation system** - Both players must confirm eliminations
+- ✅ **Subtle kill missions** - 50 conversation-based missions that hide assassination intent
+- ✅ **Witness quest confirmation** - Environmental quests require social verification
+- ✅ **Multi-session support** - Multiple concurrent games with session codes
+- ✅ **Avatar evolution** - 6-level progression system with visual rewards
+- ✅ **Mobile-responsive** - Optimized for party use on phones
+- ✅ **Real-time updates** - WebSocket-based instant game state synchronization
+
+**📊 Content Status:**
+- **Kill Missions:** 50 subtle, effective missions ✅
+- **Environmental Quests:** 120 diverse park challenges (need 80 more for full 200)
+- **Avatar Variations:** 40+ monster types with evolution enhancements ✅
+
+### 📋 OPTIONAL FUTURE ENHANCEMENTS (Post-Party)
+- **Visual / Branding**
+  • Official title: **"Rustin's Secret Game"** ✅ (implemented)
+  • Add a small Rustin emoji/avatar in the header for branding 

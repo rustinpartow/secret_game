@@ -1,0 +1,29 @@
+{
+  "name": "secret-game-backend",
+  "version": "1.0.0",
+  "description": "Backend for Rustin's Secret Game",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["game", "social", "websocket"],
+  "author": "Rustin",
+  "license": "ISC",
+  "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "socket.io": "^4.8.1",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.9.0",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}
